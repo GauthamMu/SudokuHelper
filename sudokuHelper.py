@@ -91,16 +91,16 @@ def rowChecking(sudoku):
           sudoku[iIndex][jIndex] = combined
     # Running through one more time, to check if a digit is only possible in a single field, meaning it has to go there
     for j in rowPossibilities:
-      print(j)
+      print("Row: " + str(iIndex) + ", Digit: " + j)
       jAppearances = []
       # 0 based indexing
       for kIndex, k in enumerate(i):
         if not k.isdigit() or len(k) != 1:
           if j in k:
             jAppearances += str(kIndex)
-      print(jAppearances)
+      print("Fields: " + str(jAppearances))
       if len(jAppearances) == 1:
-        sudoku[iIndex][jIndex] = j
+        sudoku[iIndex][int(jAppearances[0])] = j
   return sudoku
 
 sudoku = rowChecking(sudoku)
@@ -121,7 +121,17 @@ def colChecking(sudoku):
       if not j.isdigit() or len(j) != 1:
         combined = ''.join(sorted(set(j) & set(colPossibilities)))
         sudokuCols[iIndex][jIndex] = combined
-
+    for j in colPossibilities:
+      print("Column: " + str(iIndex) + ", Digit: " + j)
+      jAppearances = []
+      # 0 based indexing
+      for kIndex, k in enumerate(i):
+        if not k.isdigit() or len(k) != 1:
+          if j in k:
+            jAppearances += str(kIndex)
+      print("Fields: " + str(jAppearances))
+      if len(jAppearances) == 1:
+        sudokuCols[iIndex][int(jAppearances[0])] = j
   sudoku = [list(col) for col in zip(*sudokuCols)]
   return sudoku
 
@@ -164,18 +174,30 @@ sudoku = boxChecking(sudoku)
 print("After checking boxes:")
 printSudoku(sudoku)
 
-progress = True
-while progress:
-  before = deepcopy(sudoku)
-  sudoku = boxChecking(colChecking(rowChecking(sudoku)))
-  progress = (sudoku != before)
+# progress = True
+# while progress:
+#   before = deepcopy(sudoku)
+#   sudoku = boxChecking(colChecking(rowChecking(sudoku)))
+#   progress = (sudoku != before)
 
-print("After checking rows, columns and boxes again a few times:")
+# print("After checking rows, columns and boxes again a few times:")
+# printSudoku(sudoku)
+
+# sudoku = boxChecking(colChecking(rowChecking(sudoku)))
+
+# print("After checking rows, columns and boxes again one more time:")
+# printSudoku(sudoku)
+
+sudoku = rowChecking(sudoku)
+print("After checking rows again one more time:")
 printSudoku(sudoku)
 
-sudoku = boxChecking(colChecking(rowChecking(sudoku)))
+sudoku = colChecking(sudoku)
+print("After checking columns again one more time:")
+printSudoku(sudoku)
 
-print("After checking rows, columns and boxes again one more time:")
+sudoku = boxChecking(sudoku)
+print("After checking boxes again one more time:")
 printSudoku(sudoku)
 
 # Removes hints after getting as far as possible
