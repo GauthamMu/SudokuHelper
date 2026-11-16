@@ -1,28 +1,29 @@
 from copy import deepcopy
 
-ordinance = {
-  1: "1st",
-  2: "2nd",
-  3: "3rd",
-  4: "4th",
-  5: "5th",
-  6: "6th",
-  7: "7th",
-  8: "8th",
-  9: "9th"
-}
+DEBUG = True
 
-sudokuRaw = []
-for time in ordinance.values():
-  sudokuRaw.append(
-    input(f"Enter {time} row of Sudoku (no gaps between numbers!):"))
-
-sudoku = []
-
-for i in sudokuRaw:
-  sudoku.append([])
-  for j in i:
-    sudoku[-1].append(j)
+# Usually invoked, but not if in DEBUG (in DEBUG, Sudoku comes from test Sudoku)
+if not DEBUG:
+  ordinance = {
+    1: "1st",
+    2: "2nd",
+    3: "3rd",
+    4: "4th",
+    5: "5th",
+    6: "6th",
+    7: "7th",
+    8: "8th",
+    9: "9th"
+  }
+  sudokuRaw = []
+  for time in ordinance.values():
+    sudokuRaw.append(
+      input(f"Enter {time} row of Sudoku (no gaps between numbers!):"))
+  sudoku = []
+  for i in sudokuRaw:
+    sudoku.append([])
+    for j in i:
+      sudoku[-1].append(j)
 
 # For testing purposes
 # Coopzeitung Nr. 20
@@ -43,8 +44,10 @@ for i in sudokuRaw:
 # sudoku = [['6', '9', ' ', ' ', '8', ' ', '5', '1', '2'], ['4', '8', ' ', '5', '1', '2', '9', ' ', '6'], ['1', '2', '5', '9', '6', ' ', '8', ' ', ' '], ['9', '3', '2', '6', '5', '1', '4', '8', '7'], ['5', '6', '8', ' ', '4', ' ', '3', '9', '1'], ['7', '4', '1', '3', '9', '8', '6', '2', '5'], ['3', '1', '9', '4', '7', '5', '2', '6', '8'], ['8', '5', '6', '1', '2', '9', '7', ' ', ' '], ['2', '7', '4', '8', '3', '6', '1', '5', '9']]
 # Coopzeitung Nr. 22
 # sudoku = [[' ', '2', ' ', ' ', '7', '3', ' ', ' ', ' '], [' ', ' ', ' ', ' ', ' ', ' ', ' ', '1', '6'], [' ', '5', ' ', '1', ' ', ' ', '7', ' ', '2'], [' ', '4', '3', '9', ' ', ' ', '1', ' ', ' '], [' ', ' ', ' ', ' ', '6', ' ', ' ', ' ', ' '], [' ', ' ', '6', ' ', ' ', '1', '2', '5', ' '], ['5', ' ', '4', ' ', ' ', '2', ' ', '3', ' '], ['8', '9', ' ', ' ', ' ', ' ', ' ', ' ', ' '], [' ', ' ', ' ', '5', '9', ' ', ' ', '8', ' ']]
-# Coopzeitung Nr. 46
+# Coopzeitung Nr. 46, pre-solve
 sudoku = [[' ', ' ', '3', ' ', '5', ' ', '9', ' ', '8'], [' ', ' ', ' ', '9', ' ', '4', '5', ' ', ' '], [' ', '4', ' ', ' ', ' ', ' ', ' ', ' ', ' '], [' ', '9', ' ', '6', '3', '1', ' ', ' ', '7'], ['7', ' ', ' ', '4', '8', '5', ' ', ' ', '3'], ['4', ' ', ' ', '2', '7', '9', ' ', '6', ' '], [' ', ' ', ' ', ' ', ' ', ' ', ' ', '8', ' '], [' ', ' ', '7', '5', ' ', '6', ' ', ' ', ' '], ['2', ' ', '6', ' ', '4', ' ', '3', ' ', ' ']]
+# Coopzeitung Nr. 46, post best solve so far
+# sudoku = [[' ', ' ', '3', ' ', '5', ' ', '9', ' ', '8'], [' ', ' ', ' ', '9', ' ', '4', '5', ' ', ' '], [' ', '4', ' ', ' ', ' ', ' ', ' ', ' ', ' '], [' ', '9', ' ', '6', '3', '1', ' ', ' ', '7'], ['7', ' ', ' ', '4', '8', '5', ' ', ' ', '3'], ['4', ' ', ' ', '2', '7', '9', ' ', '6', ' '], [' ', ' ', ' ', ' ', ' ', ' ', ' ', '8', ' '], [' ', ' ', '7', '5', ' ', '6', ' ', ' ', ' '], ['2', ' ', '6', ' ', '4', ' ', '3', ' ', ' ']]
 
 def printSudoku(sudoku):
   icount = 0
@@ -81,7 +84,15 @@ def rowChecking(sudoku):
         rowPossibilities += str(j)
     for jIndex, j in enumerate(i):
       if not j.isdigit() or len(j) != 1:
-        sudoku[iIndex][jIndex] = rowPossibilities
+        # First pass; J empty and therefore equal to false
+        if not j or j == " ":
+          print("J = false, '" + j + "'")
+          sudoku[iIndex][jIndex] = rowPossibilities
+        # Not first pass;
+        else:
+          print("J = true, '" + j + "'")
+          combined = ''.join(sorted(set(j) & set(rowPossibilities)))
+          sudoku[iIndex][jIndex] = combined
   return sudoku
 
 sudoku = rowChecking(sudoku)
@@ -154,6 +165,12 @@ while progress:
 print("After checking rows, columns and boxes again a few times:")
 printSudoku(sudoku)
 
+sudoku = boxChecking(colChecking(rowChecking(sudoku)))
+
+print("After checking rows, columns and boxes again one more time:")
+printSudoku(sudoku)
+
+# Removes hints after getting as far as possible
 def hintRemover(sudoku):
   for iIndex, i in enumerate(sudoku):
     for jIndex, j in enumerate(i):
