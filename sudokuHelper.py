@@ -45,7 +45,9 @@ if not DEBUG:
 # Coopzeitung Nr. 22
 # sudoku = [[' ', '2', ' ', ' ', '7', '3', ' ', ' ', ' '], [' ', ' ', ' ', ' ', ' ', ' ', ' ', '1', '6'], [' ', '5', ' ', '1', ' ', ' ', '7', ' ', '2'], [' ', '4', '3', '9', ' ', ' ', '1', ' ', ' '], [' ', ' ', ' ', ' ', '6', ' ', ' ', ' ', ' '], [' ', ' ', '6', ' ', ' ', '1', '2', '5', ' '], ['5', ' ', '4', ' ', ' ', '2', ' ', '3', ' '], ['8', '9', ' ', ' ', ' ', ' ', ' ', ' ', ' '], [' ', ' ', ' ', '5', '9', ' ', ' ', '8', ' ']]
 # Coopzeitung Nr. 46
-sudoku = [[' ', ' ', '3', ' ', '5', ' ', '9', ' ', '8'], [' ', ' ', ' ', '9', ' ', '4', '5', ' ', ' '], [' ', '4', ' ', ' ', ' ', ' ', ' ', ' ', ' '], [' ', '9', ' ', '6', '3', '1', ' ', ' ', '7'], ['7', ' ', ' ', '4', '8', '5', ' ', ' ', '3'], ['4', ' ', ' ', '2', '7', '9', ' ', '6', ' '], [' ', ' ', ' ', ' ', ' ', ' ', ' ', '8', ' '], [' ', ' ', '7', '5', ' ', '6', ' ', ' ', ' '], ['2', ' ', '6', ' ', '4', ' ', '3', ' ', ' ']]
+# sudoku = [[' ', ' ', '3', ' ', '5', ' ', '9', ' ', '8'], [' ', ' ', ' ', '9', ' ', '4', '5', ' ', ' '], [' ', '4', ' ', ' ', ' ', ' ', ' ', ' ', ' '], [' ', '9', ' ', '6', '3', '1', ' ', ' ', '7'], ['7', ' ', ' ', '4', '8', '5', ' ', ' ', '3'], ['4', ' ', ' ', '2', '7', '9', ' ', '6', ' '], [' ', ' ', ' ', ' ', ' ', ' ', ' ', '8', ' '], [' ', ' ', '7', '5', ' ', '6', ' ', ' ', ' '], ['2', ' ', '6', ' ', '4', ' ', '3', ' ', ' ']]
+# Coopzeitung Nr. 46, solved a little bit more
+sudoku = [[' ', '2', '3', ' ', '5', ' ', '9', '4', '8'], [' ', '7', ' ', '9', ' ', '4', '5', '3', ' '], [' ', '4', '9', ' ', ' ', ' ', ' ', ' ', ' '], [' ', '9', ' ', '6', '3', '1', ' ', ' ', '7'], ['7', '6', ' ', '4', '8', '5', ' ', '9', '3'], ['4', '3', ' ', '2', '7', '9', ' ', '6', ' '], [' ', ' ', '4', ' ', ' ', ' ', ' ', '8', ' '], [' ', ' ', '7', '5', ' ', '6', ' ', ' ', ' '], ['2', ' ', '6', ' ', '4', ' ', '3', ' ', ' ']]
 
 def printSudoku(sudoku):
   icount = 0
@@ -76,7 +78,7 @@ printSudoku(sudoku)
 # Checking presence of numbers in rows (horizontally)
 def rowChecking(sudoku):
   for iIndex, i in enumerate(sudoku):
-    rowPossibilities = ""
+    rowPossibilities = []
     for j in range(1, 10):
       if str(j) not in i:
         rowPossibilities += str(j)
@@ -84,11 +86,13 @@ def rowChecking(sudoku):
       if not j.isdigit() or len(j) != 1:
         # First pass; J empty and therefore equal to false
         if not j or j == " ":
-          sudoku[iIndex][jIndex] = rowPossibilities
+          sudoku[iIndex][jIndex] = str(rowPossibilities)
         # Not first pass;
         else:
           combined = ''.join(sorted(set(j) & set(rowPossibilities)))
           sudoku[iIndex][jIndex] = combined
+          if len(combined) == 1:
+            rowPossibilities.remove(combined)
     # Running through one more time, to check if a digit is only possible in a single field, meaning it has to go there
     for j in rowPossibilities:
       print("Row: " + str(iIndex) + ", Digit: " + j)
@@ -113,7 +117,7 @@ def colChecking(sudoku):
   sudokuCols = [list(col) for col in zip(*sudoku)]
 
   for iIndex, i in enumerate(sudokuCols):
-    colPossibilities = ""
+    colPossibilities = []
     for j in range(1, 10):
       if str(j) not in i:
         colPossibilities += str(j)
@@ -121,6 +125,8 @@ def colChecking(sudoku):
       if not j.isdigit() or len(j) != 1:
         combined = ''.join(sorted(set(j) & set(colPossibilities)))
         sudokuCols[iIndex][jIndex] = combined
+        if len(combined) == 1:
+          colPossibilities.remove(combined)
     for j in colPossibilities:
       print("Column: " + str(iIndex) + ", Digit: " + j)
       jAppearances = []
