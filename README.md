@@ -1,5 +1,6 @@
-
 # 🧩 Sudoku Solver Assistant (Human-like Strategy)
+
+![Screenshot](Screenshot.png)
 
 This Python script is a human-style Sudoku solving assistant. It takes a Sudoku puzzle input (row by row) and attempts to reduce possibilities for each cell using logical deductions — mimicking how a person might approach solving a puzzle step by step.
 
@@ -30,9 +31,9 @@ The script follows a simple rule-based logic:
 ## ✅ Example
 
 ```bash
-Enter 1st row of Sudoku (no gaps between numbers!):53  7    
-Enter 2nd row of Sudoku (no gaps between numbers!):6  195   
-Enter 3rd row of Sudoku (no gaps between numbers!): 98    6 
+Enter 1st row of Sudoku (no gaps between numbers!):53  7
+Enter 2nd row of Sudoku (no gaps between numbers!):6  195
+Enter 3rd row of Sudoku (no gaps between numbers!): 98    6
 ...
 ```
 
@@ -41,15 +42,15 @@ Intermediate states will be printed, ending with something like:
 ```
 Final sudoku:
  +-----------------+-----------------+-----------------+
- |  5   .   3  |  .   7   .  |  .   .   .  | 
- |  6   .   .  |  1   9   5  |  .   .   .  | 
- |  .   9   8  |  .   .   .  |  .   6   .  | 
+ |  5   .   3  |  .   7   .  |  .   .   .  |
+ |  6   .   .  |  1   9   5  |  .   .   .  |
+ |  .   9   8  |  .   .   .  |  .   6   .  |
 ...
 ```
 
 ## 🧪 Testing
 
-The script includes several commented-out test puzzles taken from newspapers, Sudoku magazines, and Wikipedia. Just uncomment any of them to use instead of live input.
+The script includes several commented-out test puzzles taken from newspapers, Sudoku magazines, and Wikipedia. Just uncomment any of them to use instead of live input. (And set DEBUG to True instead of false)
 
 ## 🛠️ Requirements
 
@@ -60,6 +61,7 @@ The script includes several commented-out test puzzles taken from newspapers, Su
 
 - `sudokuHelper.py` — main script file
 - `README.md` — this file
+- `Screenshot.png` — a screenshot of the end result of this program
 
 ## 🚀 Future Improvements
 
