@@ -86,11 +86,9 @@ def rowChecking(sudoku):
       if not j.isdigit() or len(j) != 1:
         # First pass; J empty and therefore equal to false
         if not j or j == " ":
-          print("J = false, '" + j + "'")
           sudoku[iIndex][jIndex] = rowPossibilities
         # Not first pass;
         else:
-          print("J = true, '" + j + "'")
           combined = ''.join(sorted(set(j) & set(rowPossibilities)))
           sudoku[iIndex][jIndex] = combined
   return sudoku
