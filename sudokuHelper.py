@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-DEBUG = True
+DEBUG = False
 
 # Usually invoked, but not if in DEBUG (in DEBUG, Sudoku comes from test Sudoku)
 if not DEBUG:
@@ -46,8 +46,6 @@ if not DEBUG:
 # sudoku = [[' ', '2', ' ', ' ', '7', '3', ' ', ' ', ' '], [' ', ' ', ' ', ' ', ' ', ' ', ' ', '1', '6'], [' ', '5', ' ', '1', ' ', ' ', '7', ' ', '2'], [' ', '4', '3', '9', ' ', ' ', '1', ' ', ' '], [' ', ' ', ' ', ' ', '6', ' ', ' ', ' ', ' '], [' ', ' ', '6', ' ', ' ', '1', '2', '5', ' '], ['5', ' ', '4', ' ', ' ', '2', ' ', '3', ' '], ['8', '9', ' ', ' ', ' ', ' ', ' ', ' ', ' '], [' ', ' ', ' ', '5', '9', ' ', ' ', '8', ' ']]
 # Coopzeitung Nr. 46
 # sudoku = [[' ', ' ', '3', ' ', '5', ' ', '9', ' ', '8'], [' ', ' ', ' ', '9', ' ', '4', '5', ' ', ' '], [' ', '4', ' ', ' ', ' ', ' ', ' ', ' ', ' '], [' ', '9', ' ', '6', '3', '1', ' ', ' ', '7'], ['7', ' ', ' ', '4', '8', '5', ' ', ' ', '3'], ['4', ' ', ' ', '2', '7', '9', ' ', '6', ' '], [' ', ' ', ' ', ' ', ' ', ' ', ' ', '8', ' '], [' ', ' ', '7', '5', ' ', '6', ' ', ' ', ' '], ['2', ' ', '6', ' ', '4', ' ', '3', ' ', ' ']]
-# Coopzeitung Nr. 46, solved a little bit more
-sudoku = [[' ', '2', '3', ' ', '5', ' ', '9', '4', '8'], [' ', '7', ' ', '9', ' ', '4', '5', '3', ' '], [' ', '4', '9', ' ', ' ', ' ', ' ', ' ', ' '], [' ', '9', ' ', '6', '3', '1', ' ', ' ', '7'], ['7', '6', ' ', '4', '8', '5', ' ', '9', '3'], ['4', '3', ' ', '2', '7', '9', ' ', '6', ' '], [' ', ' ', '4', ' ', ' ', ' ', ' ', '8', ' '], [' ', ' ', '7', '5', ' ', '6', ' ', ' ', ' '], ['2', ' ', '6', ' ', '4', ' ', '3', ' ', ' ']]
 
 def printSudoku(sudoku):
   icount = 0
@@ -95,14 +93,12 @@ def rowChecking(sudoku):
             rowPossibilities.remove(combined)
     # Running through one more time, to check if a digit is only possible in a single field, meaning it has to go there
     for j in rowPossibilities:
-      print("Row: " + str(iIndex) + ", Digit: " + j)
       jAppearances = []
       # 0 based indexing
       for kIndex, k in enumerate(i):
         if not k.isdigit() or len(k) != 1:
           if j in k:
             jAppearances += str(kIndex)
-      print("Fields: " + str(jAppearances))
       if len(jAppearances) == 1:
         sudoku[iIndex][int(jAppearances[0])] = j
   return sudoku
@@ -128,14 +124,12 @@ def colChecking(sudoku):
         if len(combined) == 1:
           colPossibilities.remove(combined)
     for j in colPossibilities:
-      print("Column: " + str(iIndex) + ", Digit: " + j)
       jAppearances = []
       # 0 based indexing
       for kIndex, k in enumerate(i):
         if not k.isdigit() or len(k) != 1:
           if j in k:
             jAppearances += str(kIndex)
-      print("Fields: " + str(jAppearances))
       if len(jAppearances) == 1:
         sudokuCols[iIndex][int(jAppearances[0])] = j
   sudoku = [list(col) for col in zip(*sudokuCols)]
@@ -180,31 +174,19 @@ sudoku = boxChecking(sudoku)
 print("After checking boxes:")
 printSudoku(sudoku)
 
-# progress = True
-# while progress:
-#   before = deepcopy(sudoku)
-#   sudoku = boxChecking(colChecking(rowChecking(sudoku)))
-#   progress = (sudoku != before)
+progress = True
+while progress:
+  before = deepcopy(sudoku)
+  sudoku = boxChecking(colChecking(rowChecking(sudoku)))
+  progress = (sudoku != before)
 
-# print("After checking rows, columns and boxes again a few times:")
-# printSudoku(sudoku)
+print("After checking rows, columns and boxes again a few times:")
+printSudoku(sudoku)
 
-# sudoku = boxChecking(colChecking(rowChecking(sudoku)))
+sudoku = boxChecking(colChecking(rowChecking(sudoku)))
 
 # print("After checking rows, columns and boxes again one more time:")
 # printSudoku(sudoku)
-
-sudoku = rowChecking(sudoku)
-print("After checking rows again one more time:")
-printSudoku(sudoku)
-
-sudoku = colChecking(sudoku)
-print("After checking columns again one more time:")
-printSudoku(sudoku)
-
-sudoku = boxChecking(sudoku)
-print("After checking boxes again one more time:")
-printSudoku(sudoku)
 
 # Removes hints after getting as far as possible
 def hintRemover(sudoku):
